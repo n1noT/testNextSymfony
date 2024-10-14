@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  php:
+    build:
+      context: ./php
+    volumes:
+      - ../symfony:/var/www/symfony
+    networks:
+      - symfony_network
+
+  caddy:
+    image: caddy:2
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+      - ../nextjs:/usr/share/caddy/nextjs
+      - ../symfony:/usr/share/caddy/symfony
+    ports:
+      - "80:80"
+    networks:
+      - symfony_network
+
+  nextjs:
+    build:
+      context: ./nextjs
+    volumes:
+      - ../nextjs:/app
+    ports:
+      - "3000:3000"
+    networks:
+      - symfony_network
+
+networks:
+  symfony_network:
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -1,0 +1,11 @@
+:80 {
+    root * /usr/share/caddy/symfony/public
+    php_fastcgi php:9000
+    file_server
+
+    handle /api/* {
+        reverse_proxy nextjs:3000
+    }
+
+    try_files {path} /index.php?{query}
+}
